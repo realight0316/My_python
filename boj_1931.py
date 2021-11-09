@@ -28,3 +28,22 @@
 # 2 13
 # 12 14
 
+case_num = int(input())                         # 회의의 수
+times = []                                      # 시간대를 저장할 리스트 선언
+
+for _ in range(case_num):
+    start, end = map(int, input().split())      # 시작시간 start, 종료시간 end 순서대로 입력
+    times.append([start, end])                  # append로 리스트에 덧붙이기
+
+times.sort(key=lambda x : x[0])                 # 시작시간으로 정렬(sort: 대상 자체를 정렬)
+times = sorted(times, key=lambda x : x[1])      # 종료시간으로 정렬(sorted: 대상을 정렬한 리스트 하나 만듬)
+
+cnt = 0                                         # 가능 시간대 횟수
+end_temp = 0                                    # end시간을 기억해줄 임시변수
+
+for start, end in times:                        # times의 start와 end를 그대로 받음
+    if start >= end_temp:                       # 시작 시간대와 끝나는 시간을 비교 (시작시간이 끝난시간 이후라면 진행이 가능하므로)
+        end_temp = end                          # 횟수 증가
+        cnt += 1
+
+print(cnt)
