@@ -44,16 +44,30 @@
 # * ** ** ** ** ** ** ** ** *
 # ***************************
 
-def recursive_function(N):
-    if N / 3 == 1:
-        result = 
-        return
-    recursive_function(N/3)
-    
-    
-    
-    return
+
+def recursive_function(unit):                       # 기본단위(unit)가 될 별리스트를 인자로 받음
+    result = []
+    for i in range(len(unit) * 3):                  # 기본 단위인자(unit)가 3배 증가해야함
+        if i // len(unit) == 1:                     # 3으로 나눴을때 몫의 정수부분이 1이면(= 중앙여백 들어가는 줄)
+            result.append(
+                unit[i % len(unit)]                 # 해당 unit만큼 * 가져와서
+                + " " * len(unit)                   # unit길이만큼 공백 추가
+                + unit[i % len(unit)])              # 공백뒤에 해당 unit만큼 * 가져와서 추가
+        else:
+            result.append(unit[i % len(unit)] * 3)  # unit한줄씩 3배씩 복사
+    return result
+
+result = ['***', '* *', '***']                      # 기본단위(unit)이자 N이 3일때의 결과값(result)
+
 N = int(input())
+cnt = 0
 
-print(recursive_function(N))
+while N != 3:                                       # N이 3이면 추가적인 복사가 필요없으므로 생략
+    N //= 3                                         # 3의 몇제곱인지 확인해야함
+    cnt += 1                                        # N = 3^cnt
 
+for _ in range(cnt):                                # 제곱수만큼 진행, 3이면 제곱수 없음으로 0회 진행
+    result = recursive_function(result)
+
+for x in result:
+    print(x)
