@@ -69,5 +69,5 @@ while N != 3:                                       # N이 3이면 추가적인 
 for _ in range(cnt):                                # 제곱수만큼 진행, 3이면 제곱수 없음으로 0회 진행
     result = recursive_function(result)
 
-for x in result:
+for x in result:                                    # result는 List타입이므로 for문 이용해서 한줄씩 출력
     print(x)
