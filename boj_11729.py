@@ -27,21 +27,18 @@
 # 1 3
 
 result = []
-start= 1; sub= 2; end=3
-def towerofhanoi(num, start, sub, end):
-    if num == 1:
-        result.append([start, end])
-        print(str(start)+'에서'+str(end)+'로 이동')
-        return 
-    towerofhanoi(num-1, start, end, sub)
-    result.append([start, end])
-    print(str(start)+'에서'+str(end)+'로 이동')
-    towerofhanoi(num-1, sub, end, start)
-    result.append([start, end])
+def towerofhanoi(num, start, end, sub):     # 원반갯수, 시작지점, 목적지점, 보조지점
+    if num == 1:                            # 원판이 1개일때 혹은 마지막 원판
+        result.append((start, end))         # 가진 원판 한개를 목적지점으로 이동하고 종료
+        return
+    towerofhanoi(num-1, start, sub, end)    # 최대원판을 목적지점으로 옮기기 위해선 나머지원판을 보조지점으로 옮겨야함, 이 순간엔 보조지점이 목적지
+    result.append((start, end))             # 최하단에 있었을 최대원판을 목적지로 이동
+    towerofhanoi(num-1, sub, end, start)    # 보조지점으로 옮겨놨던 원판들을 다시 목적지로 옮겨야함
+    
 
 num = int(input())
 towerofhanoi(num, 1, 3, 2)
 
-print(len(result))
-for x, y in result:
-    print(x, y)
+print(len(result))                          # 몇번의 이동이 있었는지 확인, 리스트내부 갯수 확인
+for x, y in result:                         # 2차원 리스트로 저장했음으로 하나씩 꺼내서 할당
+    print(x, y)                             # for x in result로 작동시 "(x, y)"로 출력되므로 하나씩 할당
