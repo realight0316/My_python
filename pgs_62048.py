@@ -18,9 +18,23 @@
 # 입출력 예 #1
 # 가로가 8, 세로가 12인 직사각형을 대각선 방향으로 자르면 총 16개 정사각형을 사용할 수 없게 됩니다. 원래 직사각형에서는 96개의 정사각형을 만들 수 있었으므로, 96 - 16 = 80 을 반환합니다.
 
-def solution(w,h):
-    answer = 1
-    return answer
+def solution(w, h): 
+    if w == 1 or h == 1:                                # 가로, 세로길이 중 단 하나라도 1이면 반드시 대각선에 의해 반으로 잘림
+        answer = 0
+    elif w == h:                                        # 정사각형일때는 대각선이 매번 꼭지점을 지나기 때문에 변의 길이만큼 잘리게 됨
+        answer = w * h - w
+    else:
+        b = max(w, h); s = min(w, h)                    # 큰 수에서 작은 수를 나누기 위해 미리 판별
+        gcd = Euclidean_Algorithm(b, s)                 # 유클리드 호제법을 이용하여 최대공약수를 찾아낸다 (제한사항의 숫자가 너무 커서 이 방법으로 찾는 것이 빠름)
+        answer = (w*h)-(((w//gcd)+(h//gcd)-1)*gcd)      # 대각선이 꼭지점을 찍는 최초의 위치(= 패턴 최소단위)를 찾아 최소공배수만큼 곱해준다
+    return answer                                       # (그림을 통한 설명 영상: https://youtu.be/LZ94TH5L--8)
+
+def Euclidean_Algorithm(a, b):                          # 유클리드 호제법 / 알고리즘 (강의영상: https://youtu.be/J5Yl2kHPAY4)
+    gcd = a % b                                         # 큰 수를 작은 수로 나눈다
+    if gcd == 0:                                        # 나머지가 0이면 작은 수는 최소공배수
+        gcd = b
+        return gcd
+    return Euclidean_Algorithm(b, gcd)                  # 0이 아니면 작은 수와 나머지를 한번 더 나누어본다.
 
 w, h = map(int, input('w와 h 입력: ').split())
-print(w, '그리고', h)
+print(solution(w, h))
