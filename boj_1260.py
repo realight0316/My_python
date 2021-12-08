@@ -42,42 +42,42 @@
 # 1000 999
 # 1000 999
 
-from collections import deque
+from collections import deque   # BFS를 위한 deque
 
 def dfs(graph, v, visit, answer):
-    visit[v] = True
-    answer.append(v)
-    for i in graph[v]:
-        if not visit[i]:
-            dfs(graph, i, visit, answer)
+    visit[v] = True             # 시작노드 v 방문 처리
+    answer.append(v)            # 정답 리스트에 방문한 노드 추가
+    for i in graph[v]:          # 연결된 노드수 만큼 반복
+        if not visit[i]:        # if 방문안했으면
+            dfs(graph, i, visit, answer)   # 현위치 시작노드로 취급하여 재귀 
     return answer
 
 def bfs(graph, v, visit, answer):
-    queue = deque([v])
-    visit[v] = True
-    while queue:
-        x = queue.popleft()
-        answer.append(x)
-        for i in graph[x]:
-            if not visit[i]:
-                queue.append(i)
-                visit[i] = True
+    queue = deque([v])          # 시작노드를 넣어서 큐 생성
+    visit[v] = True             # 시작노드 v 방문 처리
+    while queue:                # queue가 비어있으면 종료
+        x = queue.popleft()     # 가장 마지막에 들어온 노드 큐에서 빼내기
+        answer.append(x)        # 빼낸 노드 정답 리스트에 추가
+        for i in graph[x]:      # 빼낸 노드의 간선만큼 반복
+            if not visit[i]:    # 방문 안했으면
+                queue.append(i) # 큐에 연결노드 넣어주고
+                visit[i] = True # 해당 노드 방문처리
     return answer
 
         
 
-n, m, v = map(int, input().split())
-graph = [[]]
-visit = [False] * (n+1)
+n, m, v = map(int, input().split())     # n 노드갯수, m 간선갯수, v시작노드
+graph = [[]]                    # 2차원 리스트 선언
+visit = [False] * (n+1)         # 처음엔 모두 미방문처리, 노드 0번 안쓰고 1번부터 쓰기 위해서 n+1
 dfs_ans = []
 bfs_ans = []
 
-for _ in range(n):
-    graph.append([])
+for _ in range(n):              # 노드 갯수만큼 반복
+    graph.append([])            # 2차원 리스트
 
-for _ in range(m):
-    x, y = map(int, input().split())
-    graph[x].append(y)
+for _ in range(m):              # 제공한 간선수만큼 진행
+    x, y = map(int, input().split())    # 간선정보 x와 y에 수신
+    graph[x].append(y)          # 해당문제의 간선은 양방향이므로 서로에게 추가
     graph[y].append(x)
     graph[x].sort()
     graph[y].sort()
@@ -85,11 +85,11 @@ for _ in range(m):
 dfs(graph, v, visit, dfs_ans)
 # print('dfs_ans: ', dfs_ans)
 
-visit = [False] * (n+1)
+visit = [False] * (n+1)         # 선행된 dfs로 모든 노드가 방문처리 되어있어서 다시 초기화
 bfs(graph, v, visit, bfs_ans)
 # print('bfs_ans: ', bfs_ans)
 
-for ans in dfs_ans:
+for ans in dfs_ans:             # 결과출력 양식 맞추기
     print(ans, '', end='')
 print()
 for ans in bfs_ans:
