@@ -31,22 +31,39 @@
 # 93 181 245 214 315 36 185 138 216 295
 # 출력 = 497
 
+# 브루트 포스(Brute force) 알고리즘 이용 (brute: 짐승, 짐승같은, 난폭한, 맹목적인)
+# 정확도 100%이며 거의 완벽한 병렬작업이 가능하지만 문제복잡도에 매우 민감함
+
 n, m = map(int, input().split())
 x = list(map(int, input().split()))
-
-# n = 5
-# m = 21
-# x = [5,6,7,8,9]
 
 ans = 0
 
 for x1 in range(len(x)):                # 첫번째 선택 카드
     for x2 in range(x1+1, len(x)):      # 두번째 선택 카드(이미 선택된 카드 제외)
         for x3 in range(x2+1, len(x)):  # 세번째 선택 카드(이미 선택된 카드 제외)
-            sum = x[x1] + x[x2] + x[x3] # 선택된 카드의 합
-            if sum <= m:                # 합이 기준값 이하인지 확인
-                ans = max(ans, sum)     # 예상정답값과 무엇이 큰지 비교
+            num = x[x1] + x[x2] + x[x3] # 선택된 카드의 합
+            if num <= m:                # 합이 기준값 이하인지 확인
+                ans = max(ans, num)     # 예상정답값과 무엇이 큰지 비교
 print(ans)                              # 종료하고 정답 출력
 
+# -------------------------------------------------------------------
+# 파이썬 itertools 라이브러리를 이용한 방법
+
+from itertools import permutations, combinations
+
+n, m = map(int, input().split())
+x = list(map(int, input().split()))
+
+array = permutations(x, 3)      # x의 원소중에서 3개를 뽑아 순열리스트를 만듬
+array = combinations(x, 3)      # x의 원소중에서 3개를 뽑아 조합리스트를 만듬 (원소중복 없음)
+# 순열은 순서의 개념이 포함되어있어서 (A, B)와 (B, A)는 다른것으로 취급한다. 조합은 동일 취급
+
+ans = 0
+
+for i in array:                     # 자동으로 만들어진 리스트에서 하나씩 받아옴
+    if m >= sum(i):                 # 해당 리스트 원소의 합이 기준값이하인지 확인
+        ans = max(ans, sum(i))      # 가장 큰값을 정답으로 처리
+print(ans)
 
 
