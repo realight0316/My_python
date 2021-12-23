@@ -27,36 +27,53 @@ from collections import deque
 # 큐를 이용하기 위해 import
 
 def solution(n, edge):
-    answer = 0
+    graph   = []
+    visit   = []
+
+    for _ in range(n+1):
+        graph.append([])
+        visit.append(-1)
+
+    for x, y in edge:
+        graph[x].append(y)
+        graph[y].append(x)
+        graph[x].sort()
+        graph[y].sort()
+
+    bfs(graph, visit)
+    answer = visit.count(max(visit))
     return answer
 
-def bfs (hi, tango, num):
-    if hi in tango:
-        return num
+def bfs (graph, visit):
+    queue = deque([1])
+    visit[1] = 0                # 시작지점 방문처리 0
+    while queue:
+        x = queue.popleft()     # 실행시점에서 가장 먼저 들어온 노드 추출
+        for i in graph[x]:
+            if visit[i] == -1:  # 해당 노드x와 연결된 노드중에 미방문 노드인 경우
+                queue.append(i) # queue에 추가
+                visit[i] = int(visit[x])+1
+                                # 미방문 되어있던 노드를 방문처리하고 노드x보다 1단계 더 이동함으로 +1
 
+# 위 코드까지 프로그래머스 입력답안 --------------------------------------------------------------
+# 아래코드의 진행 순서대로 설명 주석 입력
 
 n       = 6
 edge    = [[3, 6], [4, 3], [3, 2], [1, 3], [1, 2], [2, 4], [5, 2]]
 answer  = 0
 
-graph   = []
+graph   = []            # 노드 간선을 정리할 그래프
+visit   = []            # 방문처리와 단계를 저장할 리스트 (-1 미방문, 0 시작지점, 1<=n 시작지점으로부터 n번째로 연결)
 
-for _ in range(n):
+for _ in range(n+1):    # 노드 갯수만큼 그래프와 방문리스트를 구성
     graph.append([])
+    visit.append(-1)
 
-for n in range(1, n+1):
-    for x, y in edge:
-        if x == n:
-            graph[n-1].append(y)
-        if y == n:
-            graph[n-1].append(x)
+for x, y in edge:
+    graph[x].append(y)  # 서로 연결되어있으므로 서로의 그래프에 입력
+    graph[y].append(x)
+    graph[x].sort()     # 오름차순 정리
+    graph[y].sort()
 
-print(graph, '\n')
-
-for i in range(2, len(graph)+1):
-    print(i)
-
-graph.remove(graph[0])
-while len(graph) != 0:
-    temp = graph.pop()
-
+bfs(graph, visit)       # BFS탐색 진행
+print(visit.count(max(visit)))  # visit에서 'visit의 최댓값'이 몇개인지 카운트
