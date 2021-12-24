@@ -25,33 +25,34 @@ n= 3; computers = [[1, 1, 0], [1, 1, 0], [0, 0, 1]] # 2
 
 from collections import deque
 
+# BFS 알고리즘을 이용하여 문제풀이
 def bfs(nodes, ways, visit):
     answer = 0
     queue = deque([])
-    for n in range(nodes):
-        if visit[n] == False:
-            queue.append(n)
+    for n in range(nodes):                  # 모든 노드를 대상으로 알고리즘 진행
+        if visit[n] == False:               # 노드가 이전에 탐색하면서 방문을 했으면 알고리즘 미진행
+            queue.append(n)                 # 이후 일반 BFS탐색법으로 진행
             visit[n] = True
-            while queue:
+            while queue:                    # queue가 비면 탐색이 종료된 것
                 x = queue.popleft()
                 for i in ways[x]:
                     if visit[i] == False:
                         queue.append(i)
                         visit[i] = True
-            answer += 1
+            answer += 1                     # queue가 비어서 반복진행이 종료되면 연결된 네트워크 1회 탐색완료 처리
     return answer
 
 ways = []
 visit= [False] * n
-for _ in range(n):
+for _ in range(n):                          # 노드의 수만큼 리스트에 추가
     ways.append([])
 
-for i in range(n):
+for i in range(n):                          # 제공된 computers를 노드별로 정리
     for j in range(n):
-        if i != j and computers[i][j] == 1:
-            if j not in ways[i] and i not in ways[j]:
+        if i != j and computers[i][j] == 1: # i와 j가 동일하면 자기자신이므로 제외, i와 j가 연결되어 있는 경우
+            if j not in ways[i] and i not in ways[j]:   # i와 j가 뒤바뀐경우를 제외하여 중복삽입을 방지
                 ways[i].append(j)
                 ways[j].append(i)
 
-print(bfs(n, ways, visit))
+print(bfs(n, ways, visit))                  # 위 함수로 진행하여 answer 출력
 
