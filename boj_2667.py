@@ -38,27 +38,31 @@ for _ in range(n):
     aptmap.append(temp)
 
 def bfs(x, y):
-    global count
-    if x <= -1 or y <= -1 or x >= n or y >= n:
+    global count        # count 전역변수 선언
+    if (x <= -1         # x좌표 0미만 False
+        or y <= -1      # y좌표 0미만 False
+        or x >= n       # x좌표 n초과 False
+        or y >= n):     # y좌표 n초과 False
         return False
-    if aptmap[x][y] == 1:
-        aptmap[x][y] = 0
-        count += 1
-        bfs(x+1, y)
-        bfs(x-1, y)
-        bfs(x, y+1)
-        bfs(x, y-1)
-        return True
-    return False
 
-count = 0
+    if aptmap[x][y] == 1:
+        aptmap[x][y] = 0    # 방문했므로 0으로 변경
+        count += 1          # 단지별 건물수 카운트
+        bfs(x+1, y)         # 오른쪽으로 이동
+        bfs(x-1, y)         # 왼쪽으로 이동
+        bfs(x, y+1)         # 위로 이동
+        bfs(x, y-1)         # 아래로 이동
+        return True
+    return False        # 존재하는 좌표지만 건물이 없으면(0) False
+
+count = 0               # count 초기화
 for x in range(n):
     for y in range(n):
-        if bfs(x, y) == True:
-            answer.append(count)
-            count = 0
+        if bfs(x, y) == True:   # 시작좌표에 건물이 존재하면 진행
+            answer.append(count)# 해당 단지의 건물갯수 정답리스트에 추가
+            count = 0           # 단지계산이 종료 되었으므로 재초기화
             
-answer.sort()
-print(len(answer))
-for i in answer:
+answer.sort()           # 오름차순 정렬
+print(len(answer))      # 단지 갯수
+for i in answer:        # 단지별 건물갯수 하나씩 출력
     print(i)
