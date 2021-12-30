@@ -45,10 +45,49 @@
 # 0 -1 0 0 0 0
 # 0 0 0 0 -1 0
 # 0 0 0 0 -1 1
+from collections import deque
 
-m, n = map(int, input().split())
-tomato = list()
-for _ in range(n):
-    tomato.append(list(map(int, input().split())))
+answer = 0
+garo, sero = map(int, input().split())
+box = list()
+for _ in range(sero):
+    box.append(list(map(int, input().split())))     # 입력값 모두 받아서 저장, 리스트에서 가로세로 헷갈림 주의
 
-print(tomato)
+moving_sero = [0, 0, -1, 1]     # 상하좌우로 이동
+moving_garo = [-1, 1, 0, 0]
+
+queue = deque()                 # BFS를 위한 큐 형성
+
+for i in range(sero):
+    for j in range(garo):
+        if box[i][j] == 1:
+            queue.append([i,j])     # 익은 토마토(1) 위치에서 동시다발적으로 진행하므로 1의 위치 큐 삽입
+
+while queue:
+    temp = queue.popleft()
+    x, y = map(int, temp)
+
+    for temp_num2 in range(4):      # 해당 지점을 중심으로 상하좌우 확인
+        nx = x + moving_garo[temp_num2]
+        ny = y + moving_sero[temp_num2]
+
+        if 0<=nx<sero and 0<=ny<garo and box[nx][ny]==0:    # 존재하는 좌표이며 익지않은 토마토(0)일 경우 진행
+                queue.append([nx, ny])
+                box[nx][ny] = box[x][y] + 1
+
+for X in box:
+    if 0 in X:
+        print(-1)
+        exit()
+    else:
+        answer = max(answer, max(X))
+
+# for X in box:
+#     for Y in X:
+#         if Y == 0:          # 0이 있는지 대조하여 확인
+#             print(-1)       # 있으면 -1 출력하고 종료
+#             exit()
+#         else:               # 없으면 최댓값 단계 찾아서 -1 하고 출력
+#             answer = max(answer, Y)
+
+print(answer -1)
