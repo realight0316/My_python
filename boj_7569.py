@@ -57,15 +57,15 @@ box = list()
 answer = 0
 queue = deque([])
 
-M, N, H = map(int, input().split())
+M, N, H = map(int, input().split())     # 3차원 리스트 필요
 for h in range(H):
     sample = []
     for n in range(N):
-        sample.append(list(map(int, input().split())))
+        sample.append(list(map(int, input().split()))) # 샘플에 2차원 먼저 올리고
         for m in range(M):
             if sample[n][m] == 1:
                 queue.append([h,n,m])
-    box.append(sample)
+    box.append(sample)                  # H기준으로 리스트를 한번씩 더 묶어줌
 
 # box[H][N][M]으로 구성
 
@@ -74,24 +74,45 @@ dh = [0,0,0,0,1,-1]
 dn = [-1,1,0,0,0,0]
 dm = [0,0,-1,1,0,0]
 
+# BFS 알고리즘 이용
 while queue:
     h, n, m = map(int, queue.popleft())
     for temp_num in range(6):
         th = h + dh[temp_num]
         tn = n + dn[temp_num]
         tm = m + dm[temp_num]
-        if 0<=th<H and 0<=tn<N and 0<=tm<M and box[th][tn][tm] == 0:
+        if 0<=th<H and 0<=tn<N and 0<=tm<M and box[th][tn][tm] == 0:    # 존재하는 좌표인지, 이동 가능한 상태(0)인지
             queue.append([th,tn,tm])
             box[th][tn][tm] = box[h][n][m] + 1
-            answer = max(answer, box[th][tn][tm])
+            answer = max(answer, box[th][tn][tm])       # 최고단계 찾기
 
 for i in box:
     for j in i:
-        if 0 in j:
+        if 0 in j:      # 아직 안익은 토마토(0)이 존재할 경우 -1 출력
             print(-1)
             exit()
-if answer == 0:
+if answer == 0:         # 이미 다 익은 상태의 토마토일 경우 0 출력
     print(answer)
 else:
-    print(answer-1)
+    print(answer-1)     # 첫단계에서 이미 1로 시작했기 때문에 결과값에서 -1 계산
 
+
+
+# ----------------- 백준 해당문제 질문글에 올라온 연산시간 줄이는 법
+# 지금 풀이는 꽤 정석적이기 때문에, 굳이 개선에 시간을 투자하시지 않으셔도 좋을 것 같습니다.
+# 그럼에도 개선이 필요하다면 다음과 같은 것들을 해보세요.
+
+# 1. 전체를 함수 안에 넣는다.(놀랍게도 잔역변수 참조가 지역변수 참조보다 느려서 이게 큰 효과가 있는 코드가 많습니다.)
+
+# 2.인덱싱을 줄입니다.
+# 22번 줄의 포문을 for u,v,w in zip(dx, dy, dz) 등으로 바꿀 수 있습니다. 
+# 아니면 아예 전용 generator를 만들어서 위의 코드보다 못생기지만 빠른 if문을 안에 넣어주면 더 효율적으로 작동할 수 있겠네요.
+# 한 가지 더 쥐어짜내라면 BFS는 이런 식으로도 짤 수 있습니다. bfs가 항상 작은 거리의 점부터 방문함을 이용하는 풀이입니다:
+
+# dist = 0
+# while q:{
+# dist += 1
+# for _ in range(len(q)): {
+# ...tomato[k][x][y]=dist
+# } 
+# }
