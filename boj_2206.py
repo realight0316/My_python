@@ -34,6 +34,7 @@
 # 1111
 # 1110
 
+# BFS 이용, 2차원지도 두개(3차원)를 방문확인용으로 만들어서 벽뚫기 사용유무에 따라 구분
 from collections import deque
 
 N, M = map(int, input().split())
@@ -42,35 +43,33 @@ mymap = []
 for _ in range(N):
     mymap.append(list(map(int, input())))
 
-visit = [[[0]*M for _ in range(N)]]*2
+visit = [[[0]*M for i in range(N)] for j in range(2)]
+                # 0을 M(가로)만큼 만들어줌
+                # 해당 리스트를 N번 반복 
+                # 그 2차원리스트를 두번 반복하여 3차원화
+                # visit = [W][N][M]으로 구성, W가 벽뚫기 사용 유무(0 or 1)를 판단
         
-moving= [[0, -1], [0, 1], [-1, 0], [1, 0]]
+moving= [[0, -1], [0, 1], [-1, 0], [1, 0]]  # 각각 N과M에 사용하여 좌/우/상/하 이동
 
 def bfs():
     queue = deque([[0, 0, 0]])
-    visit[0][0][0] = 1
+    visit[0][0][0] = 1      # 벽뚫기 미사용, (0,0) 좌표
 
     while queue:
         n, m, w = queue.popleft()
         if n == N-1 and m == M-1:
-            return visit[n][m][w]
-        
+            return visit[w][n][m]
         for i, j in moving:
-            tn = n + i
+            tn = n + i      # 좌우상하 이동
             tm = m + j
-            
-            if 0<=tn<N and 0<=tm<M and visit[tn][tm][w]==0:
-                print('좌표: ',n,m,'///',tn,tm,'///',mymap[tn][tm])
-                if mymap[tn][tm] == 0:
-                    print('A')
+            if 0<=tn<N and 0<=tm<M and visit[w][tn][tm]==0:     # 실존좌표 및 해당 위치 미방문시 실행
+                if mymap[tn][tm] == 0:                          # 이동가능한 경우
                     queue.append([tn, tm, w])
-                    visit[tn][tm][w] = visit[n][m][w] + 1
-                if w == 0 and mymap[tn][tm] == 1:
-                    print('B')
-                    queue.append([tn, tm, 1])
-                    visit[tn][tm][1] = visit[n][m][w] + 1
-        print(queue)
-    return -1
+                    visit[w][tn][tm] = visit[w][n][m] + 1       # 이전 단계에서 +1
+                if w == 0 and mymap[tn][tm] == 1:               # 벽뚫기 미사용의 상태에서 벽과 조우한 경우
+                    queue.append([tn, tm, 1])                   # 해당 좌표, 벽뚫기 사용했음으로 1
+                    visit[1][tn][tm] = visit[w][n][m] + 1       # 이전 단계에서 +1
+    return -1               # 모든 조건에 해당되지 않았을 때
 
 print(bfs())
 
