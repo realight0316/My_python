@@ -35,3 +35,5 @@
 # 예제 출력
 # YES
 # NO
+
+N = int(input())
