@@ -101,40 +101,33 @@ places = [
 
 answer = [1, 1, 1, 1, 1]
 
-from collections import deque
+from collections import deque           # BFS 이용
 
-def distance(x1,y1,x2,y2):
-    result = abs(x1-x2) + abs(y1-y2)
+def distance(x1,y1,x2,y2):              # 맨하탄거리 방식으로 거리 구하기
+    result = abs(x1-x2) + abs(y1-y2)    # 문제보고 미리 만들었는데 사용안했음
     return result
 
-recon_xy = [[0, -1], [0, 1], [-1, 0], [1, 0]]
+recon_xy = [[0, -1], [0, 1], [-1, 0], [1, 0]]   # 상하좌우 이동
 
-for z in range(5):
-    queue = deque()
-    for y in range(5):
-        for x in range(5):
-            visit  = [[0 for a in range(5)] for b in range(5)]
-            if places[z][y][x] == 'P':
-                queue.append([x,y])
-                visit[y][x] = 1
+for z in range(5):                      # 대기실
+    queue = deque()                     # 대기실마다 큐 재생성
+    for y in range(5):                  # 라인
+        for x in range(5):              # 좌석
+            if places[z][y][x] == 'P':  # 사용좌석으로 부터 거리두기
+                visit  = [[0 for a in range(5)] for b in range(5)]  # 시작지점 잡힐때마다 방문기록 초기화
+                queue.append([x,y])     # 시작지점 큐 삽입
+                visit[y][x] = 1         # 방문 처리
                 while queue:
                     i, j = queue.popleft()
-                    for tx, ty in recon_xy:
+                    for tx, ty in recon_xy:     # 상하좌우 탐색
                         nx = i + tx
                         ny = j + ty
-                        if 0 <= nx < 5 and 0 <= ny < 5:
-                            if places[z][ny][nx] == 'P' and visit[j][i] <= 1:
-                                answer[z] = 0
-                                print(z, '//', nx, ny)
+                        if 0 <= nx < 5 and 0 <= ny < 5 and visit[j][i] <= 2:    # 실존하는 좌표 & 2블럭이상 떨어져 있어야하므로 2단계 이하
+                            if places[z][ny][nx] == 'P' and visit[ny][nx] == 0: # 방문하지 않은 타 사용자를 찾을 경우
+                                answer[z] = 0                                   # 거리두기 위반 처리
                                 break
-                            elif  places[z][ny][nx] != 'X':
-                                # if places[z][ny][nx] == 'P':
-                                #     answer[z] = 0
-                                
-                                # else:
-                                queue.append([nx,ny])
-                                visit[ny][nx] = visit[j][i] + 1
-                                
-    print('------')
+                            elif  places[z][ny][nx] != 'X':                     # + 벽이 아닌 빈테이블일 경우
+                                queue.append([nx,ny])                           # 좌표 큐 삽입
+                                visit[ny][nx] = visit[j][i] + 1                 # 몇단계인지 기억해두기 (현단계=이전단계+1)
 
 print(answer)
