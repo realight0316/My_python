@@ -35,6 +35,7 @@ import sys
 N = int(sys.stdin.readline())
 wine = list()
 dp = list()
+
 for _ in range(N):
     wine.append(int(sys.stdin.readline()))
     dp.append(0)
@@ -46,6 +47,13 @@ if N > 2:
     dp[2] = max(wine[0]+wine[2], wine[1]+wine[2], dp[1])
 for n in range(3, N):
     dp[n] = max(wine[n]+dp[n-2], dp[n-1], wine[n]+wine[n-1]+dp[n-3])
+
+    # 3회 연속 선택은 불가능하므로 그 제한사항을 피해서 3가지 경우의 수가 발생
+
+    # 4번째일때 예시
+    # 4 +     2 + 1 // wine[n]+dp[n-2]
+    # 4 + 3     + 1 // wine[n]+wine[n-1]+dp[n-3]
+    #     3 + 2 + 1 // dp[n-1]
 
 # print(wine)
 # print(dp, '\n')
