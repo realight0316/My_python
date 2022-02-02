@@ -36,18 +36,16 @@ import sys
 
 N = int(sys.stdin.readline())
 line = list()
-dp = list()
+dp = [1]*N
 for _ in range(N):
     line.append(list(map(int, sys.stdin.readline().split())))
+line.sort()                 # 리스트 오름차순
 
-line.sort()
-print(line)
-
+# print(line)
+                    # LIS(Longest Increasing Subsequence, 최장 증가 부분수열)
 for x in range(N):
     for y in range(x):
-        if len(dp) == 0:
-            dp.append(line[x][1])
-        if dp[-1] < line[y][1]:
-            dp.append(line[y][1])
-
-print(dp)
+        if line[x][1] > line[y][1] and dp[x] < dp[y]+1:
+            dp[x] = dp[y] + 1
+        
+print(N-max(dp))
