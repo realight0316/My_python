@@ -18,3 +18,5 @@ def solution(n, k, cmd):
 
 results = solution(n, k, cmd)
 print(f"{answer} / {results}")
+
+미안하다 이거 보여주려고 뻥커밋했다
