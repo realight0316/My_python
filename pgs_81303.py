@@ -39,8 +39,59 @@ def solution(n, k, cmd):
                 answer += "O"
         except:
             answer += 'X'
+    return answer
+
+class node:
+    def __init__(self):
+        self.remv = False
+        self.prev = None
+        self.next = None
+
+def solution2(n, k, cmd):
+    answer = ''
+    members = [node() for _ in range(n)]
+    now = members[k]
+    del_list = []
+
+    for i in range(1, n):
+        members[i-1].next = members[i]
+        members[i].prev = members[i-1]
+    
+    for order in cmd:
+        if order[0] == 'U':
+            for _ in range(int(order[2:])):
+                now = now.prev
+        elif order[0] == 'D':
+            for _ in range(int(order[2:])):
+                now = now.next
+        elif order[0] == 'C':
+            now.remv = True
+            del_list.append(now)
+            if now.prev:
+                (now.prev).next = now.next
+            if now.next:
+                (now.next).prev = now.prev
+                now = now.next
+            else:
+                now = now.prev
+        else:
+            temp = del_list.pop()
+            temp.remv = False
+            up = temp.prev
+            down = temp.next
+            if up:
+                up.next = temp
+            if down:
+                down.prev = temp
+    
+    for i in range(n):
+        if members[i].remv:
+            answer += 'X'
+        else:
+            answer += 'O'
+
 
     return answer
 
-results = solution(n, k, cmd)
+results = solution2(n, k, cmd)
 print(f"{answer} / {results}")
