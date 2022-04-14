@@ -41,51 +41,51 @@ def solution(n, k, cmd):
             answer += 'X'
     return answer
 
-class node:
+class node:                 # 연결리스트로 노드구성
     def __init__(self):
-        self.remv = False
-        self.prev = None
-        self.next = None
+        self.remv = False   # 제거여부
+        self.prev = None    # 이전 노드 지정
+        self.next = None    # 다음 노드 지정
 
 def solution2(n, k, cmd):
     answer = ''
-    members = [node() for _ in range(n)]
-    now = members[k]
-    del_list = []
+    members = [node() for _ in range(n)]    # 위에서 만든 노드구조로 연결리스트 생성
+    now = members[k]                        # 현재 노드
+    del_list = []                           # 제거된 노드 스택
 
-    for i in range(1, n):
-        members[i-1].next = members[i]
-        members[i].prev = members[i-1]
+    for i in range(1, n):                   # 첫번째와 마지막 노드는 각각 이전/다음 노드가 없으므로 1~n-1까지
+        members[i-1].next = members[i]      # 다음 노드의 이전 노드는 현재 노드
+        members[i].prev = members[i-1]      # 이전 노드의 다음 노드는 현재 노드
     
     for order in cmd:
         if order[0] == 'U':
             for _ in range(int(order[2:])):
-                now = now.prev
+                now = now.prev              # 이전 노드 타고 이동
         elif order[0] == 'D':
             for _ in range(int(order[2:])):
-                now = now.next
+                now = now.next              # 다음 노드 타고 이동
         elif order[0] == 'C':
-            now.remv = True
-            del_list.append(now)
-            if now.prev:
-                (now.prev).next = now.next
-            if now.next:
-                (now.next).prev = now.prev
-                now = now.next
+            now.remv = True                 # 삭제 처리
+            del_list.append(now)            # 삭제된 노드정보를 스택 저장
+            if now.prev:                    # 이전노드가 존재하면
+                (now.prev).next = now.next  # 이전노드와 다음노드를 연결
+            if now.next:                    # 다음노드가 존재하면
+                (now.next).prev = now.prev  # 다음노드와 이전노드를 연결
+                now = now.next              # 다음노드를 현재 노드로 지정
             else:
-                now = now.prev
+                now = now.prev              # 다음노드가 존재하지 않으면 이전노드가 현재노드
         else:
-            temp = del_list.pop()
-            temp.remv = False
+            temp = del_list.pop()           # 제거스택 LIFO 나중에 들어간게 먼저 나옴
+            temp.remv = False               # 복구 처리
             up = temp.prev
             down = temp.next
             if up:
-                up.next = temp
+                up.next = temp              # 이전 노드와 현재노드 연결
             if down:
-                down.prev = temp
+                down.prev = temp            # 현재 노드와 이전노드 연결
     
     for i in range(n):
-        if members[i].remv:
+        if members[i].remv:                 # 제거처리된 노드를 X
             answer += 'X'
         else:
             answer += 'O'
