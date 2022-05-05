@@ -23,19 +23,19 @@
 # fares 배열에 두 지점 간 예상 택시요금은 1개만 주어집니다. 즉, [c, d, f]가 있다면 [d, c, f]는 주어지지 않습니다.
 # 출발지점 s에서 도착지점 a와 b로 가는 경로가 존재하는 경우만 입력으로 주어집니다.
 
-n=6
-s=4
-a=6
-b=2
-fares= [[4, 1, 10], [3, 5, 24], [5, 6, 2], [3, 1, 41], [5, 1, 24], [4, 6, 50], [2, 4, 66], [2, 3, 22], [1, 6, 25]]
-answer= 82
+# n=6
+# s=4
+# a=6
+# b=2
+# fares= [[4, 1, 10], [3, 5, 24], [5, 6, 2], [3, 1, 41], [5, 1, 24], [4, 6, 50], [2, 4, 66], [2, 3, 22], [1, 6, 25]]
+# answer= 82
 
-#  n=7
-#  s=3
-#  a=4
-#  b=1
-#  fares=[[5, 7, 9], [4, 6, 4], [3, 6, 1], [3, 2, 3], [2, 1, 6]]
-#  answer=14
+n=7
+s=3
+a=4
+b=1
+fares=[[5, 7, 9], [4, 6, 4], [3, 6, 1], [3, 2, 3], [2, 1, 6]]
+answer=14
 
 #  n=6
 #  s=4
@@ -44,15 +44,33 @@ answer= 82
 #  fares=[[2,6,6], [6,3,7], [4,6,7], [6,5,11], [2,5,12], [5,3,20], [2,4,8], [4,3,9]]
 #  answer=18
 
+# 지점별 최저이동비용을 테이블에 정리한 뒤에 최종적으로 A 와B의 도착지를 고려하여 이동비용 산출
 def solution(n, s, a, b, fares):
-    table = [[0 for _ in range(n)] for _ in range(n)]
-    print(table)
-    answer = 0
-    # for H in range(n):              # 합승지점
-    #     for S in range(n):          # 출발지
-    #         for E in range(n):      # 도착지
-    #             if S != E:          # 출발지, 도착지 동일하지 않은 경우
+    answer = int(1e9)               # 최소 비용 계산을 위해 최댓값으로 삽입
+    table = [[int(1e9)] * n for _ in range(n)]
 
+    for i in range(n):
+            table[i][i] = 0         # 출발지와 도착지가 동일하면 비용 0
+
+    for i in fares:
+        table[i[0]-1][i[1]-1] = table[i[1]-1][i[0]-1] = i[2]
+                                    # 방향은 관계없이 이동 비용은 같으므로 한번에 저장
+    
+    
+    for H in range(n):              # 합승지점
+        for S in range(n):          # 출발지
+            for E in range(S, n):   # 도착지
+                if S != E:          # 출발지, 도착지 동일하지 않은 경우
+                    table[S][E] = table[E][S] = min(table[S][E], table[S][H]+table[H][E])
+                                    # 합승없이 바로 도달 / 출발지-합승-도착지 : 두 값중 최저비용으로 저장
+    
+
+    for t in range(n):                                                  # 정리된 테이블값을 토대로
+        temp = table[s - 1][t] + table[t][b - 1] + table[t][a - 1]      # 시작지점-합승지점-A와B 목적지까지의 최저비용
+        answer = min(answer, temp)
+
+    for yaho in table:              # 테이블 확인용
+        print(yaho)
 
     return answer
 
