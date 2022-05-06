@@ -26,9 +26,55 @@ line = [
 ]
 answer = 2
 
+# line = [
+# "2016-09-15 20:59:57.421 0.351s",
+# "2016-09-15 20:59:58.233 1.181s",
+# "2016-09-15 20:59:58.299 0.8s",
+# "2016-09-15 20:59:58.688 1.041s",
+# "2016-09-15 20:59:59.591 1.412s",
+# "2016-09-15 21:00:00.464 1.466s",
+# "2016-09-15 21:00:00.741 1.581s",
+# "2016-09-15 21:00:00.748 2.31s",
+# "2016-09-15 21:00:00.966 0.381s",
+# "2016-09-15 21:00:02.066 2.62s"
+# ]
+# answer = 7
+
+def in_sec(times):      # 입력시간대 밀리세컨드로 변환
+    sec = 0
+    sec += int(times[:2]) * 3600
+    sec += int(times[3:5]) * 60
+    sec += int(times[6:8])
+    return sec * 1000 + int(times[9:12])
+
 def solution(lines):
     answer = 0
+
+    secline = []        # 밀리세컨드 기준 로그 [시작시점, 종료시점] 리스트
+    for log in lines:
+        ss = in_sec(log[11:])
+        ms = int(float(log[24:-1]) * 1000)
+        start = ss - ms + 1
+        end = ss + ms
+        print([start, end])
+        secline.append([start, end])
+
+    for idx, mslog in enumerate(secline):
+        temp = 0
+        while mslog[1] >= secline[idx][0] and idx < len(lines)-1:
+            temp += 1
+            idx += 1
+        answer = max(answer, temp)
+        print(mslog[0])
+
     return answer
+
+print(in_sec(line[0][11:]))
 
 results = solution(line)
 print(f"{answer} / {results}")
+
+# 로그는 자동정렬이니까 내려가면서 하나씩 대조
+# 현재값 종료시점이 다음값 시작시점보다 늦으면 +1하고 다음 로그도 대조 (반복)
+# / 다음시작보다 빠르면 다음 로그로 이동
+# 
