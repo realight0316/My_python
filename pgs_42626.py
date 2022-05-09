@@ -25,12 +25,12 @@ def solution(scoville, K):
     answer = 0
     heap = []
     for x in scoville:
-        heapq.heappush(heap, x)
+        heapq.heappush(heap, x)     # Heap리스트의 자동정렬 특성을 이용
 
-    while heap[0] < K:
-        heapq.heappush(heap, (heapq.heappop(heap) + (heapq.heappop(heap) * 2)))
-        answer += 1
-        if heap[0] < K and len(heap) == 1:
+    while heap[0] < K:              # heap의 최저값이 K보다 작으면 반복
+        heapq.heappush(heap, (heapq.heappop(heap) + (heapq.heappop(heap) * 2))) # 문제에서 주어진 공식 적용
+        answer += 1                 # 1회 누적
+        if heap[0] < K and len(heap) == 1:  # 힙이 1개만 남도록 끝까지 돌렸으나 조건에 만족하지 않으면 -1 출력
             return -1
     return answer
 
