@@ -18,3 +18,5 @@ def solution(orders, course):
 
 results = solution(orders, course)
 print(f"{answer} / {results}")
+
+# 뻥깃 함정
