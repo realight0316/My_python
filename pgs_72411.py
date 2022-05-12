@@ -18,10 +18,6 @@
 # 만약 가장 많이 함께 주문된 메뉴 구성이 여러 개라면, 모두 배열에 담아 return 하면 됩니다.
 # orders와 course 매개변수는 return 하는 배열의 길이가 1 이상이 되도록 주어집니다.
 
-from collections import Counter
-from itertools import combinations
-
-
 # orders = ["ABCFG", "AC", "CDE", "ACDE", "BCFG", "ACDEH"]
 # course = [2,3,4]
 # answer = ["AC", "ACDE", "BCFG", "CDE"]
@@ -36,25 +32,25 @@ answer = ["ACD", "AD", "ADE", "CD", "XYZ"]
 
 # Combination(리스트의 조합을 만들어줌)과 Counter(요소별 중복갯수 세기, 딕셔너리 출력) 함수를 이용하여 문제를 해결
 
+from collections import Counter
+from itertools import combinations
+
 def solution(orders, course):
     answer = []
     for x in course:
         temp = []
         for menu in orders:
-            com = combinations(sorted(menu), x)
-            temp += com
-        c = Counter(temp)
-        # for i in c:
-        #     print(i)
-        #     if len(c) != 0 and c[i] == max(c.values()):
-        #         a = ''.join(i)
-        #         answer.append(a)
+            com = combinations(sorted(menu), x)     # CA와 AC는 같은 코스임으로 소팅하여 정렬 후 진행
+            temp += com                             # 조합을 한데 모아서
+        counter_dic = Counter(temp)                 # 카운터를 이용하여 중복갯수 파악
 
-        if len(c) != 0 and max(c.values()) != 1:
-            answer += [''.join(f) for f in c if c[f] == max(c.values())]
-    return sorted(answer)
+        if len(counter_dic) != 0 and max(counter_dic.values()) != 1:    # 존재하지 않거나, 카운트 값이 1이면 제외
+            for i in counter_dic:
+                if counter_dic[i] == max(counter_dic.values()):         # 횟수가 최댓값과 같으면
+                    j = ''.join(i)                                      # 해당 리스트(조합)을 문자열 하나로 만들고
+                    answer.append(j)                                    # 정답 리스트에 추가
+
+    return sorted(answer)                           # 오름차순 정렬하여 정답 제출
 
 results = solution(orders, course)
 print(f"{answer} / {results}")
-
-# 뻥깃 함정
