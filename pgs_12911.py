@@ -21,9 +21,20 @@ answer = 83
 
 def solution(n):
     answer = 0
-    return answer
+
+    bin_n = bin(n)
+    listn = list(map(int, bin_n[2:]))
+    cntn = listn.count(1)
+    x = n
+    cntx = 0
+
+    while cntn != cntx:
+        print(n, x)
+        x += 1
+        bin_x = bin(x)
+        listx = list(map(int, bin_x[2:]))
+        cntx = listx.count(1)
+    return x
 
 results = solution(n)
 print(f"{answer} / {results}")
-
-#Qjdrlt
