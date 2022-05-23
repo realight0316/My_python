@@ -27,35 +27,48 @@ answer = "(()())()"
 # p = "()))((()"
 # result = "()(())()"
 
-def uandv(p):
-    u, v = [], []
-    i = 0
-    while i < len(p):
-        if p[i] == '(' and p[i+1] == ')':
-            u.append(p.pop(i))
-            u.append(p.pop(i))
-    return u, v
+# 기본 알고리즘은 본문에서 주어졌고 이것을 구현
+
+def uandv(str):
+    check = True        # 올바른 괄호 문자열 확인
+    l, r = 0, 0         # 현재 문자열의 (와 )의 수
+    lstack = []         # ( 스택
+    
+    for i in range(len(str)):       # 주어진 문자열 앞번부터 순회
+        if str[i] == '(':           # ( 일때
+            l += 1                  # 갯수세기
+            lstack.append('(')      # 스택 누적
+        else:                       # ) 일때
+            r += 1                  # 갯수세기
+            if len(lstack) == 0:    # 누적이 없으면 올바르지 않은 문자열
+                check = False
+            else:                   # 누적있으면 스택 하나 빼기
+                lstack.pop()
+    
+        if l == r:                  # 좌우괄호 갯수가 같을 때 최소크기의 u,v분리
+            return i+1, check       # 분리할 인덱스와 올바른지 여부
+    return 0, False                 # 분리할수없는 문자열
+
 
 def solution(p):
-    answer = ''
-    plist = list(map(str, p))
-    u, v = [], []
+    if len(p) == 0:         # 1번
+        return ''
+    
+    i, check = uandv(p)     # 2번 / u와 v분리할 인덱스 찾고, 올바른 괄호 문자열인지도 확인
+    u = p[:i]
+    v = p[i:]
 
-    i = 0
-    print(len(p))
-    while plist:
-        if i >= len(plist)-1:
-            break
-        if plist[i] == '(' and plist[i+1] == ')':
-            plist.pop(i)
-            plist.pop(i)
-            u += '()'
-            v = plist
-            i = 0
+    if check:                   # 3번 / 올바른 문자열의 경우
+        return u + solution(v)  # 3-1번 / 이어 붙인뒤 리턴
+    
+    answer = '(' + solution(v) + ')'    # 4-1번, 4-2번, 4-3번 / 앞뒤에 (랑 )붙이고 재귀로 수행
+    for ii in range(1, len(u)-1):       # 4-4번 / 뒤집어서 뒤에 붙여준다
+        if u[ii] == '(':
+            answer += ')'
         else:
-            i += 1
+            answer += '('
 
-    return answer
+    return answer               # 4-5번
 
 result = solution(p)
 print(f"{answer} / {result}")
