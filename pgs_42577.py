@@ -24,35 +24,34 @@
 phone_book = ["12","123","1235","567","88"]
 answer = False
 
-def solution2(phone_book):      # 효율성 부족으로 실패처리
+def solution2(phone_book):              # 효율성 부족으로 실패처리
     answer = True
-    phone_book.sort(key=len)
+    phone_book.sort(key=len)            # 문자 길이순으로 정렬
     for i, num in enumerate(phone_book):
         print(i, num)
-        for x in range(i+1, len(phone_book)):
+        for x in range(i+1, len(phone_book)):       # 현재 문자열과 이후 뒤에 있는 문자열하고 비교하면서 순회
             if num == phone_book[x][:len(num)]:
-                print("if:", phone_book[x][:len(num)])
                 return False
     return answer
 
 def solution(phone_book):
-    phone_book.sort()
+    phone_book.sort()                       # 문자열 정렬, 접두어만 확인하는것이라 앞글자기준 정렬만 해도 동일한 문자열끼리 붙여줄 수 있다
     for i, num in enumerate(phone_book):
-        if i != len(phone_book)-1 and num == phone_book[i+1][:len(num)]:
+        if i != len(phone_book)-1 and num == phone_book[i+1][:len(num)]:    # 인덱스 에러방지 and 현재문자와 다음문자가 동일하면 False
             return False
-    return True
+    return True                             # 최종까지 위 조건이 만족되지 않으면 True
 
 def solution_hash(phone_book):      # 문제 분류에 맞게 해시를 이용한 풀이
-    hashtable = {}
+    hashtable = {}                  # 딕셔너리 {key:value}
 
-    for num in phone_book:
+    for num in phone_book:          # {전화번호:1}로 구성
         hashtable[num] = 1
     print(hashtable)
 
-    for num in phone_book:
-        for i in range(len(num)):
-            x = num[:i]
-            if x in phone_book:
+    for num in phone_book:          # 해시의 앞부터 순회
+        for i in range(len(num)):   # 현재 번호의 앞글자부터 하나씩 늘려가며 비교
+            x = num[:i]             # 슬라이싱으로 검색구간 늘리기
+            if x in hashtable and x != num:     # 해시테이블에 해당 문자열이 있는지 확인 and 자기 자신 제외
                 return False
     return True
 
