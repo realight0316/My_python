@@ -23,3 +23,5 @@ def solution(numbers):
 
 result = solution(numbers)
 print(f"{answer} / {result}")
+
+# 뻥커밋
