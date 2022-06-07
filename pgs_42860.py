@@ -22,14 +22,24 @@
 # name은 알파벳 대문자로만 이루어져 있습니다.
 # name의 길이는 1 이상 20 이하입니다.
 
-name = "JEROEN"
-answer = 56
+# name = "JEROEN"
+# answer = 56
 
-# name = "JAN"
-# answer = 23
+name = "JAN"
+answer = 23
 
 def solution(name):
     answer = 0
+    limit = len(name)-1                         # 최대이동수 제한
+    for i, n in enumerate(name):
+        answer += min(ord(n)-65, 90-ord(n)+1)   # 현재 알파벳을 순차적으로 탐색 or 역순으로 탐색
+
+        idx = i + 1                                 # 다음 알파벳
+        while idx < len(name) and name[idx] == 'A': # 문자열 초과하지않음 / 해당 알파벳이 A (=탐색 불필요)
+            idx += 1
+
+        limit = min([limit, 2*i+len(name)-idx, i+2*(len(name)-idx)])    # 기존방식, 왼쪽에서 스타트, 오른쪽에서 스타트
+    answer += limit
     return answer
 
 result = solution(name)
