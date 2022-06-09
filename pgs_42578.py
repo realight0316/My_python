@@ -16,26 +16,20 @@
 clothes	= [["crowmask", "face"], ["bluesunglasses", "face"], ["smoky_makeup", "face"]]
 answer = 3
 
-from itertools import combinations, product
-
 def solution(clothes):
-    answer = 0
+    answer = 1
     dic = {}
 
-    for c in clothes:
+    for c in clothes:                   # 리스트 순회하면서 의상 종류별로 딕셔너리 정리
         if c[1] in dic.keys():
-            dic[c[1]].append(c[0])
+            dic[c[1]].append(c[0])      # 해당 종류가 이미 딕셔너리에 존재하면 append
         else:
-            dic[c[1]] = [c[0]]
-        answer += 1
-    print(dic, len(dic))
+            dic[c[1]] = [c[0]]          # 새 항목의 경우 새로 추가
+    
+    for d in dic.keys():                # 종류별로 순회
+        answer *= len(dic[d]) + 1       # 옷 조합 동시에 일어나는 사건이므로 곱의 법칙, 아예 선택하지 않는 경우 +1
 
-    # com = list(combinations(dic.values(), len(dic)))
-    com = list(product(*(dic[a] for a in dic)))
-    print(com)
-    answer += len(list(com))
-    print(len(com))
-    return answer
+    return answer - 1                   # 아무것도 입지않는 경우는 제외 -1
 
 result = solution(clothes)
 print(f"{answer} / {result}")
