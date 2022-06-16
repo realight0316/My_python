@@ -30,4 +30,5 @@ def solution(land):
 result = solution(land)
 print(f"{answer} / {result}")
 
-# 뻥이요
+
+# asdlkajdlasndl
