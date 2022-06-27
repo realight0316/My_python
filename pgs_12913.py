@@ -31,4 +31,4 @@ result = solution(land)
 print(f"{answer} / {result}")
 
 
-# asdlkajdlasndl
+# asffglkjeroibnmzdhdbfkdnbdkj
