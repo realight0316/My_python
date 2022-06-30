@@ -30,5 +30,3 @@ def solution(land):
 result = solution(land)
 print(f"{answer} / {result}")
 
-
-# asffglkjeroibnmzdhdbfkdnbdkjhgffvytfytgfhgfgh
