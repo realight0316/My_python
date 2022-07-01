@@ -23,9 +23,13 @@ land = [[1,2,3,5],[5,6,7,8],[4,3,2,1]]
 answer = 16
 
 def solution(land):
-    answer = 0
+    answer = []
+    for i in range(1, len(land)):
+        for j in range(len(land[0])):
+            # land[i][j] += max(max(land[i-1][0:j]), max(land[i-1][j+1:]))
+            land[i][j] += max(max(max(land[i-1][0:j], [0]), max(land[i-1][j+1:], [0])))
 
-    return answer
+    return max(max(land))
 
 result = solution(land)
 print(f"{answer} / {result}")
