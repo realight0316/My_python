@@ -25,11 +25,9 @@ answer = 16
 def solution(land):
     answer = []
     for i in range(1, len(land)):
-        for j in range(len(land[0])):
-            # land[i][j] += max(max(land[i-1][0:j]), max(land[i-1][j+1:]))
-            land[i][j] += max(max(max(land[i-1][0:j], [0]), max(land[i-1][j+1:], [0])))
-
-    return max(max(land))
+        for j in range(len(land[0])):                               # 두번째줄부터 마지막줄까지 순회
+            land[i][j] += max(land[i-1][:j] + land[i-1][j+1:])      # 이전줄 바로 위 요소를 제외한 나머지 중에 최댓값과 현재 요소 더하기
+    return max(land[-1])                                            # 마지막 줄엔 해당 조건을 만족한 열별 최대 계산값이 모여있음
 
 result = solution(land)
 print(f"{answer} / {result}")
