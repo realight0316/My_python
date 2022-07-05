@@ -31,3 +31,5 @@ def solution(people, limit):
 
 result = solution(people, limit)
 print(f"{answer} / {result}")
+
+# Here's looking at you, kids
