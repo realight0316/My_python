@@ -33,3 +33,4 @@ result = solution(people, limit)
 print(f"{answer} / {result}")
 
 # Here's looking at you, kids
+# 당신의 눈동자에 건배
