@@ -43,12 +43,7 @@ def solution(people, limit):
             people.pop()                        # 2인이 탑승 불가능하면 현재 가장 무거운 인원을 혼자 태워 보낸다
         answer += 1
     return answer
-
-        
-
     
-
-    return answer
 
 # 모든 테스트 케이스는 통과하지만 효율성 테스트 불통
 def solution2(people, limit):
